@@ -11,6 +11,7 @@
 |
 */
 const providers = [
+  '@adonisjs/websocket/providers/WsProvider', // Se agrega el servicio del Socket
   '@adonisjs/framework/providers/AppProvider',
   '@adonisjs/auth/providers/AuthProvider',
   '@adonisjs/bodyparser/providers/BodyParserProvider',
