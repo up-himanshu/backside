@@ -18,5 +18,8 @@
 const Ws = use('Ws')
 
 Ws.channel('chat', ({ socket }) => {
-  console.log('user joined with %s socket id', socket.id)
+	// eslint-disable-next-line no-console
+	console.log('user joined with %s socket id', socket.id)
 })
+
+Ws.channel('player', 'PlayerController.')
