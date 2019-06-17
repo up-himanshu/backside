@@ -24,6 +24,6 @@ Route.post('login','UserController.login')
 
 Route.post('register','UserController.register')
 
-Route.get('get/:id', 'UserController.getUser').middleware('auth')
+Route.get('get/:id', 'UserController.getUser').middleware(['auth'])
 
 // Route.get('get/:id', 'UserController.getUser').middleware('auth')

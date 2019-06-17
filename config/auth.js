@@ -72,8 +72,7 @@ module.exports = {
 		uid: 'email',
 		password: 'password',
 		options: {
-			secret: Env.get('APP_KEY'),
-			expiresIn: "30sec"      
+			secret: Env.get('APP_KEY')			
 		}
 	},
 
@@ -91,5 +90,5 @@ module.exports = {
 		scheme: 'api',
 		uid: 'email',
 		password: 'password'
-	}
+  }
 }

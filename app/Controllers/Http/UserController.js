@@ -3,7 +3,6 @@
 const User = use('App/Models/User')
 //const Database = use('Database')
 class UserController {
-    
 	/**
  * Metodos HTTP
  */
@@ -15,17 +14,19 @@ class UserController {
 		try {
 			if(await auth.attempt(correo, contrasena)) {
 				let usuario = await User.findBy('email',correo)
-				let accesoToken = await auth.generate(usuario)				
-				response.status(201)
-				return response.json(accesoToken)
+				let accesoToken = await auth.attempt(correo,contrasena)
+				// let accesoToken = await auth.withRefreshToken().generate(usuario)
+				return response.status(201).json(accesoToken)
 			}
-		} catch (error) {
-			response.status(403)
-			return response.json({message: 'You must Register first'})
+		} catch (error) {			
+			return response.status(400).json({message: 'noRegisterError'})
 		}
 	}
 
-	async getScore (request,response){
+	async getScore (request,response,auth) {
+		if(!auth.user.is_admin){
+			return response.status(400).json({message: 'noPlayerError'})
+		} 
 		const header = request.headers['authorization']
 		if (typeof header !== 'undefined') {
 			const bearer = header.split('.')
@@ -38,7 +39,16 @@ class UserController {
 		}
 	}
 
+	// Funciona y validado
+
 	async register ({request, auth, response}) {
+		const userExists = await User.findBy('email',request.input('correo'))
+		if(userExists) {
+			return response
+			.status(400)
+			.json({error: "userExists"})
+		}
+		else {
 		const usuario = request.input('usuario')
 		const correo = request.input('correo')
 		const contrasena = request.input('contrasena')
@@ -49,15 +59,21 @@ class UserController {
 		nuevousuario.password = contrasena
 
 		nuevousuario = await nuevousuario.save()
-		// nuevousuario.id = await Database.select('id').from('users').where('email',nuevousuario.email)		
+		// nuevousuario.id = await Database.select('id').from('users').where('email',nuevousuario.email)
+		// Checar si autologear cuando se registra		
 		let thisuser = await User.findBy('email', correo)
 		let accessToken = await auth.generate(thisuser)
 
-		return response.json({'usuario':nuevousuario,'accesotoken': accessToken})
+		return response.status(200).json({'usuario':nuevousuario,'accesotoken': accessToken})
+		}
 	}
-	async getUser({params}) {
+
+	async getUser({params,response,auth}) {		
+		if(!auth.user.is_admin){
+			return response.status(400).json({message: 'noPlayerError'})
+		} 
 		let user = await User.findBy('id',params.id)
-		return user.json({'info': user})
+		return response.json({'info': user})		
 	}
 }
 
