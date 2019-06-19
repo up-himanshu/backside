@@ -13,10 +13,30 @@ class UserController {
 		const contrasena = request.input('contrasena')
 		try {
 			if(await auth.attempt(correo, contrasena)) {
-				let usuario = await User.findBy('email',correo)
-				let accesoToken = await auth.attempt(correo,contrasena)
-				// let accesoToken = await auth.withRefreshToken().generate(usuario)
-				return response.status(201).json(accesoToken)
+			 let infoUsuario = await User.findBy('email',correo)
+			 // let token = await auth.attempt(correo,contrasena)
+				 let token = await auth.withRefreshToken().attempt(correo,contrasena)
+				/*
+				  id: number;
+  usuario: string;
+  contrasena: string;
+  nombre: string;
+  token?: string;
+  admin:boolean;
+  table.increments() ->id
+			table.string('username', 80).notNullable().unique()
+			table.string('email', 254).notNullable().unique()
+			table.string('password', 60).notNullable()
+			table.boolean('is_admin').defaultTo(false)
+			table.timestamps()
+		})
+				*/
+				return response.status(201).json(
+					{id:infoUsuario.id,
+					usuario:infoUsuario.username,
+					admin: infoUsuario.is_admin,
+					correo: infoUsuario.email,
+					token})
 			}
 		} catch (error) {			
 			return response.status(400).json({message: 'noRegisterError'})
