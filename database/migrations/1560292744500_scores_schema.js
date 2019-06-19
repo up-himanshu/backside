@@ -11,6 +11,7 @@ class ScoresSchema extends Schema {
       table.increments()
       table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('score').notNullable()
+      table.integer('display').notNullable()
       table.timestamps()
     })
   }

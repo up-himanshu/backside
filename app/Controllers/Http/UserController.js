@@ -32,20 +32,26 @@ class UserController {
 		})
 				*/
 				return response.status(201).json(
-					{id:infoUsuario.id,
-					usuario:infoUsuario.username,
-					admin: infoUsuario.is_admin,
-					correo: infoUsuario.email,
-					token})
+					{	
+						id:infoUsuario.id,
+						usuario:infoUsuario.username,						
+						correo: infoUsuario.email,
+						token,
+						rol: infoUsuario.role,
+					})
 			}
 		} catch (error) {			
-			return response.status(400).json({message: 'noRegisterError'})
+			return response.status(400).json({				
+				message: 'Usuario o Passwords incorrectos'
+			})
 		}
 	}
 
 	async getScore (request,response,auth) {
-		if(!auth.user.is_admin){
-			return response.status(400).json({message: 'noPlayerError'})
+		if(auth.user.role === 'admin'){
+			return response.status(402).json({
+				message: 'Sin Autorizacion'
+			})
 		} 
 		const header = request.headers['authorization']
 		if (typeof header !== 'undefined') {
@@ -55,7 +61,9 @@ class UserController {
 			// eslint-disable-next-line no-undef
 			next();
 		} else {
-			response.sendStatus(403)
+			response.sendStatus(403).json({
+				message: "Error Interno"
+			})
 		}
 	}
 
@@ -66,7 +74,9 @@ class UserController {
 		if(userExists) {
 			return response
 			.status(400)
-			.json({error: "userExists"})
+			.json({
+				message:'Usuario ya existe'
+			})
 		}
 		else {
 		const usuario = request.input('usuario')
@@ -84,13 +94,19 @@ class UserController {
 		let thisuser = await User.findBy('email', correo)
 		let accessToken = await auth.generate(thisuser)
 
-		return response.status(200).json({'usuario':nuevousuario,'accesotoken': accessToken})
+		// return response.status(200).json({'usuario':nuevousuario,'accesotoken': accessToken})
+		return response.status(200).json({
+			body:{
+			message: 'Registro exitoso'
+		}})
 		}
 	}
 
 	async getUser({params,response,auth}) {		
-		if(!auth.user.is_admin){
-			return response.status(400).json({message: 'noPlayerError'})
+		if(auth.user.role === 'admin'){
+			return response.status(400).json({
+				message: 'Sin Autorizacion'
+			})
 		} 
 		let user = await User.findBy('id',params.id)
 		return response.json({'info': user})		
