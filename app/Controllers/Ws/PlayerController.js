@@ -2,21 +2,24 @@
 'use strict'
 
 const User = use('App/Models/User')
+const Ws = use('Ws')
 class PlayerController {
 	constructor ({ socket, request }) {
 		this.socket = socket
 		this.request = request
 	}
-   
-	onLogin ({auth}) {
-		// this.socket.
-		auth.attempt(this.request.correo, this.request.contrasena)
-				
+   /*
+	onReturnResponse({response,request}){
+		const chat = Ws.getChannel('chat')
+		const {broadcast, emitTo} = chat.topic('chat')
+		socket.emit('id', socket.id)
+	}*/
+
+	async onMessage (message) {
+		// this.socket.broadcastToAll('message', message)
+		await this.socket.emit()
 	}
-  
-	onMessage (message) {
-		this.socket.broadcastToAll('message', message)
-	}
+	
 	/*
   onLogout() {
   

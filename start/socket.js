@@ -20,6 +20,13 @@ const Ws = use('Ws')
 Ws.channel('chat', ({ socket }) => {
 	// eslint-disable-next-line no-console
 	console.log('user joined with %s socket id', socket.id)
-})
+	console.log('a new subscription for news topic')	
+	socket.on('message', (data) => {
+	})
+}).middleware(['auth'])
 
-Ws.channel('player', 'PlayerController.')
+
+// Esto es todo para poder utilizar el canal y no agregar por partes y usar muchos closures
+// como se muestra arriba
+Ws.channel('player', 'PlayerController')
+

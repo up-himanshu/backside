@@ -21,6 +21,7 @@ class UserFilter {
    */
   async wsHandle ({ request }, next) {
     // call next to advance the request
+    
     await next()
   }
 }

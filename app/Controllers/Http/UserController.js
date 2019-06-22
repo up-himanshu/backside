@@ -15,22 +15,7 @@ class UserController {
 			if(await auth.attempt(correo, contrasena)) {
 			 let infoUsuario = await User.findBy('email',correo)
 			 // let token = await auth.attempt(correo,contrasena)
-				 let token = await auth.withRefreshToken().attempt(correo,contrasena)
-				/*
-				  id: number;
-  usuario: string;
-  contrasena: string;
-  nombre: string;
-  token?: string;
-  admin:boolean;
-  table.increments() ->id
-			table.string('username', 80).notNullable().unique()
-			table.string('email', 254).notNullable().unique()
-			table.string('password', 60).notNullable()
-			table.boolean('is_admin').defaultTo(false)
-			table.timestamps()
-		})
-				*/
+				 let token = await auth.withRefreshToken().attempt(correo,contrasena)				
 				return response.status(201).json(
 					{	
 						id:infoUsuario.id,
@@ -75,7 +60,7 @@ class UserController {
 			return response
 			.status(400)
 			.json({
-				message:'Usuario ya existe'
+				message:'Correo ya existe'
 			})
 		}
 		else {

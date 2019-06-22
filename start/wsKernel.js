@@ -12,7 +12,9 @@ const Ws = use('Ws')
 | Global middleware are executed on each Websocket channel subscription.
 |
 */
-const globalMiddleware = [
+const globalMiddleware = [  
+  // 'Adonis/Middleware/Session'  <-<- No esta instalado https://github.com/adonisjs/adonis-api-app/issues/32
+  //'Adonis/Middleware/AuthInit'  <- No esta instalado https://github.com/adonisjs/adonis-api-app/issues/32
 ]
 
 
@@ -33,6 +35,7 @@ const globalMiddleware = [
 | Ws.channel('chat', 'ChatController').middleware(['auth'])
 */
 const namedMiddleware = {
+  auth: 'Adonis/Middleware/Auth'
 }
 
 
