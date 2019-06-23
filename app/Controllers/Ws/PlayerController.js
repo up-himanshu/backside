@@ -17,7 +17,20 @@ class PlayerController {
 
 	async onMessage (message) {
 		// this.socket.broadcastToAll('message', message)
-		await this.socket.emit()
+		let comosea = [
+			{
+				'Usuario':"1",
+				'pantallaActiva':'0',
+				'puntos':0
+			
+			},
+			{
+				'Pantalla1':false,
+				'Pantalla2':false
+			}
+		];
+		this.socket.broadcastToAll("message",comosea);
+		await this.socket.emit();
 	}
 	
 	/*
