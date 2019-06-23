@@ -51,7 +51,7 @@ class PlayerController {
 
 	 async onError({error}) {
 		  await this.socket.broadcastToAll('error',error)
-	 }
+	 }				
 	
 	 async onClose() {
 
