@@ -44,7 +44,7 @@ class UserController {
 			const token = bearer[1]
 			request.token = token
 			// eslint-disable-next-line no-undef
-			next();
+			await next();
 		} else {
 			response.sendStatus(403).json({
 				message: "Error Interno"

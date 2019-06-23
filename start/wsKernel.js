@@ -13,8 +13,9 @@ const Ws = use('Ws')
 |
 */
 const globalMiddleware = [  
+ // 'Adonis/Middleware/BodyParser'
   // 'Adonis/Middleware/Session'  <-<- No esta instalado https://github.com/adonisjs/adonis-api-app/issues/32
-  //'Adonis/Middleware/AuthInit'  <- No esta instalado https://github.com/adonisjs/adonis-api-app/issues/32
+  // 'Adonis/Middleware/AuthInit'  //<- No esta instalado https://github.com/adonisjs/adonis-api-app/issues/32
 ]
 
 

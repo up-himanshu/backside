@@ -28,5 +28,5 @@ Ws.channel('chat', ({ socket }) => {
 
 // Esto es todo para poder utilizar el canal y no agregar por partes y usar muchos closures
 // como se muestra arriba
-Ws.channel('player', 'PlayerController')
+Ws.channel('player', 'PlayerController').middleware(['auth'])
 

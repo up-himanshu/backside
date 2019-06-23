@@ -3,15 +3,12 @@
 /** @type {import('@adonisjs/lucid/src/Schema')} */
 const Schema = use('Schema')
 
-// Migracion para guardar la puntuacion, esta es una tabla de tipo muchos apuntando uno a la de usuarios
-
-class ScoresSchema extends Schema {
+class ScoreSchema extends Schema {
   up () {
     this.create('scores', (table) => {
       table.increments()
-      table.integer('user_id').unsigned().references('id').inTable('users')
+      table.integer('game_id').unsigned().references('id').inTable('games')
       table.integer('score').notNullable()
-      table.integer('display').notNullable()
       table.timestamps()
     })
   }
@@ -21,4 +18,4 @@ class ScoresSchema extends Schema {
   }
 }
 
-module.exports = ScoresSchema
+module.exports = ScoreSchema
