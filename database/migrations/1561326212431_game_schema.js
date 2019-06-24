@@ -8,7 +8,7 @@ class GameSchema extends Schema {
     this.create('games', (table) => {
       table.increments()      
       table.integer('user_id').unsigned().references('id').inTable('users')
-      table.integer('display_active').notNullable()
+      table.integer('display_active').notNullable().defaultTo(0)
       table.boolean('screenone').notNullable().defaultTo('false')
       table.boolean('screentwo').notNullable().defaultTo('false')
       table.boolean('status').notNullable().defaultTo('false') // status game
