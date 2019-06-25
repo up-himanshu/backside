@@ -36,43 +36,32 @@ class PlayerController {
 	 */
 
 	async onMessage (message) {		
-		try {
-			// await this.socket.broadcastToAll('message',`Hola por parte del Servidor ${message.id}`)
-			
-			let thisvar = await Game.findBy('user_id', message.id)			
-			this.socket.broadcastToAll('message',JSON.stringify(thisvar))
-			console.log(thisvar)			
+		try {			
+				let thisvar = await Game.findBy('user_id', message.id)
+				this.socket.broadcastToAll('message',JSON.stringify(thisvar))	
+				// console.log(message)		
 		} catch (error) {
-			await this.onError(error)
+			this.socket.emit('error',error)
 		}
 	 
 	}
 	async onData (message){
-try {
-		
+	try {
+	await Game
+	.query()
+	.where('user_id', message.user_id)
+	.update({
+		display_active: `${message.display_active}`,
+		screenone: `${message.screenone}`,
+		screentwo: `${message.screentwo}`,
+		status: `${message.status}`
+	})
+	console.log(message)
+		this.socket.emit('message', await Game.findBy('users_id',{id:message.id}))
 } catch (error) {
-	
+	this.socket.emit('error',error)
 }
-	}		
-
-	 async onError({error}) {
-		  await this.socket.broadcastToAll('error',error)
-	 }				
-	
-	 async onClose() {
-
-	 }
-	/*
-  onLogout() {
-  
-  }
-  onclose() {
-  
-  }
-  onerror() {
-  
-  }*/
-  
+	}			
 }
 
 module.exports = PlayerController
