@@ -12,6 +12,7 @@ class GameSchema extends Schema {
       table.boolean('screenone').notNullable().defaultTo('false')
       table.boolean('screentwo').notNullable().defaultTo('false')
       table.boolean('status').notNullable().defaultTo('false') // status game
+      table.integer('spin').notNullable().defaultTo(0)
       table.timestamps()
     })
   }

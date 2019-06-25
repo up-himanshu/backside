@@ -49,7 +49,7 @@ class PlayerController {
 	try {
 	await Game
 	.query()
-	.where('user_id', message.user_id)
+	.where('id', message.id)
 	.update({
 		display_active: `${message.display_active}`,
 		screenone: `${message.screenone}`,
