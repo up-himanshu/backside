@@ -54,7 +54,8 @@ class PlayerController {
 		display_active: `${message.display_active}`,
 		screenone: `${message.screenone}`,
 		screentwo: `${message.screentwo}`,
-		status: `${message.status}`
+		status: `${message.status}`,
+		spin: `${message.spin}`
 	})
 	console.log(message)
 		this.socket.emit('message', await Game.findBy('users_id',{id:message.id}))
@@ -62,6 +63,7 @@ class PlayerController {
 	this.socket.emit('error',error)
 }
 	}			
+	onScore()
 }
 
 module.exports = PlayerController
