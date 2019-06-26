@@ -7,7 +7,7 @@ class ScoreSchema extends Schema {
   up () {
     this.create('scores', (table) => {
       table.increments()
-      table.integer('game_id').unsigned().references('id').inTable('games')
+      table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('score').notNullable()
       table.timestamps()
     })

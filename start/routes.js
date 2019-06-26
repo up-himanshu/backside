@@ -20,10 +20,28 @@ Route.get('/', () => {
 	return { greeting: 'Hello world in JSON' }
 })
 
+/**
+ * User Stuff
+ */
+
 Route.post('login','UserController.login')
 
 Route.post('register','UserController.register')
 
 Route.get('get/:id', 'UserController.getUser').middleware(['auth'])
+
+Route.get('games','UserController.getGames').middleware(['auth'])
+
+Route.get('score/:id','UserController.getScore').middleware(['auth'])
+
+/**
+ * Admin Stuff
+ */
+
+Route.post('createg', 'AdminController.createGame').middleware(['auth'])
+
+Route.post('updateg', 'AdminController.updateGame').middleware(['auth'])
+
+Route.post('deleteg', 'AdminController.deleteGame').middleware(['auth'])
 
 // Route.get('get/:id', 'UserController.getUser').middleware('auth')

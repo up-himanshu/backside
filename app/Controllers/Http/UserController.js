@@ -1,6 +1,8 @@
 'use strict'
 
 const User = use('App/Models/User')
+const Game = use('App/Models/Game') 
+const Score = use('App/Models/Score')
 //const Database = use('Database')
 class UserController {
 	/**
@@ -32,12 +34,38 @@ class UserController {
 		}
 	}
 
-	async getScore (request,response,auth) {
+
+	async getScore({params,response,auth}) {		
+		if(auth.user.role === 'admin'){
+			return response.status(400).json({
+				message: 'Sin Autorizacion'
+			})
+		} 
+		
+			/*
+			const user = await User.find(1)
+			const posts = await user.posts().fetch()
+			*/
+			let userInfo = await User.findBy('id',params.id)
+			let scoreUser = await userInfo.scores().fetch()
+			//let token = await userInfo.tokens().fetch()
+			return response.status(201).send(scoreUser)
+/*
+			let scoreUser = await userInfo.scores().fetch()
+			return response.status(201).json({
+				juego: scoreUser.game_id,
+				puntuaje: scoreUser.score,
+				fecha: scoreUser.created_at
+			})		*/
+	}
+/*
+	async getScore (params,response,auth) {
 		if(auth.user.role === 'admin'){
 			return response.status(402).json({
 				message: 'Sin Autorizacion'
 			})
 		} 
+		
 		const header = request.headers['authorization']
 		if (typeof header !== 'undefined') {
 			const bearer = header.split('.')
@@ -45,12 +73,21 @@ class UserController {
 			request.token = token
 			// eslint-disable-next-line no-undef
 			await next();
-		} else {
-			response.sendStatus(403).json({
-				message: "Error Interno"
+		} 			
+		else {
+			/*
+			const user = await User.find(1)
+			const posts = await user.posts().fetch()
+			
+			let userInfo = await User.findBy('id',params.id)
+			let scoreUser = await userInfo.scores().fetch()
+			return response.status(201).json({
+				juego: scoreUser.game_id,
+				puntuaje: scoreUser.score,
+				fecha: scoreUser.created_at
 			})
 		}
-	}
+	}*/
 
 	// Funciona y validado
 
@@ -95,6 +132,19 @@ class UserController {
 		} 
 		let user = await User.findBy('id',params.id)
 		return response.json({'info': user})		
+	}
+
+
+	async getGames({auth,response}){
+		if(auth.user.role === 'admin'){
+			return response.status(400).json({
+				message: 'Sin Autorizacion'
+			})
+		} 
+		let games = await Game.all()
+		return response.status(201).json({
+			games
+		})
 	}
 }
 

@@ -57,13 +57,35 @@ class PlayerController {
 		status: `${message.status}`,
 		spin: `${message.spin}`
 	})
+	if(message.spin == 6 && message.status) 
+	{
+		
+	}
 	console.log(message)
 		this.socket.emit('message', await Game.findBy('users_id',{id:message.id}))
 } catch (error) {
 	this.socket.emit('error',error)
 }
 	}			
-	onScore()
+	async onSaveScore(message){
+		// idusuario, idpartida, score		
+		try {
+		let nspin = Game.findBy('id',message.id)
+		} catch (error) {
+			this.socket.emit('error',error)
+		}
+	}
+
+	async onGames()
+	{
+		try {
+			let games = await Game.all()
+			console.log(games)
+			this.socket.broadcastToAll('games',games)
+		} catch (error) {
+			this.socket.emit('error',error)
+		}
+	}
 }
 
 module.exports = PlayerController

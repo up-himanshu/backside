@@ -35,8 +35,8 @@ class User extends Model {
 		return this.hasMany('App/Models/Token')
 	}
 
-	games() {
-		return this.hasOne('App/Models/Game')
+	scores() {
+		return this.hasMany('App/Models/Score')
 	}
 }
 
