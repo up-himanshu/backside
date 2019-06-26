@@ -41,53 +41,10 @@ class UserController {
 				message: 'Sin Autorizacion'
 			})
 		} 
-		
-			/*
-			const user = await User.find(1)
-			const posts = await user.posts().fetch()
-			*/
-			let userInfo = await User.findBy('id',params.id)
-			let scoreUser = await userInfo.scores().fetch()
-			//let token = await userInfo.tokens().fetch()
-			return response.status(201).send(scoreUser)
-/*
-			let scoreUser = await userInfo.scores().fetch()
-			return response.status(201).json({
-				juego: scoreUser.game_id,
-				puntuaje: scoreUser.score,
-				fecha: scoreUser.created_at
-			})		*/
+			/*let userInfo = await User.findBy('id',params.id)
+			let scoreUser = await userInfo.scores().fetch()*/
+							//let token = await userInfo.tokens().fetch()
 	}
-/*
-	async getScore (params,response,auth) {
-		if(auth.user.role === 'admin'){
-			return response.status(402).json({
-				message: 'Sin Autorizacion'
-			})
-		} 
-		
-		const header = request.headers['authorization']
-		if (typeof header !== 'undefined') {
-			const bearer = header.split('.')
-			const token = bearer[1]
-			request.token = token
-			// eslint-disable-next-line no-undef
-			await next();
-		} 			
-		else {
-			/*
-			const user = await User.find(1)
-			const posts = await user.posts().fetch()
-			
-			let userInfo = await User.findBy('id',params.id)
-			let scoreUser = await userInfo.scores().fetch()
-			return response.status(201).json({
-				juego: scoreUser.game_id,
-				puntuaje: scoreUser.score,
-				fecha: scoreUser.created_at
-			})
-		}
-	}*/
 
 	// Funciona y validado
 
