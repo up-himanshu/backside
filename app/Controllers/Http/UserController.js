@@ -41,9 +41,23 @@ class UserController {
 				message: 'Sin Autorizacion'
 			})
 		} 
-			/*let userInfo = await User.findBy('id',params.id)
-			let scoreUser = await userInfo.scores().fetch()*/
+			//let userInfo = await User.findBy('id',params.id)
+			
+			//let scoreUser = await userInfo.scores().fetch()
+			let topscores = await Score					
+			.query()
+			.limit(10)
+			.innerJoin('users','users.id','scores.user_id')
+			.orderBy('score','desc')
+			.fetch()
+			
+			/*let scores = await topscores			
+			.innerJoin('users','users.id','scores.user_id')
+			.fetch()*/
+			 //let scores = await topscores.innerJoin('users','user.id','score.user_id')
+			//.innerjoin('users','user.id','score.user_id')		
 							//let token = await userInfo.tokens().fetch()
+			return response.status(201).send(topscores	)
 	}
 
 	// Funciona y validado

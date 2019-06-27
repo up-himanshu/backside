@@ -40,8 +40,10 @@ Route.get('score/:id','UserController.getScore').middleware(['auth'])
 
 Route.post('createg', 'AdminController.createGame').middleware(['auth'])
 
-Route.post('updateg', 'AdminController.updateGame').middleware(['auth'])
+Route.get('getg', 'AdminController.getGame').middleware(['auth'])
 
-Route.post('deleteg', 'AdminController.deleteGame').middleware(['auth'])
+Route.post('deleteg/:id', 'AdminController.deleteGame').middleware(['auth'])
+
+// Route.post('resetg', 'AdminController.resetGame').middleware(['auth'])
 
 // Route.get('get/:id', 'UserController.getUser').middleware('auth')

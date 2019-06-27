@@ -24,7 +24,9 @@ class PlayerController {
 		 // await	this.socket.broadcastToAll('response',`You send this from client Request: ${message.id}`)			
 
 		} catch (error) {
-			this.onError(error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	}
 
@@ -36,42 +38,47 @@ class PlayerController {
 	 */
 
 	async onMessage (message) {		
-		try {			
-				let thisvar = await Game.findBy('user_id', message.id)
-				this.socket.broadcastToAll('message',JSON.stringify(thisvar))						
+		try {											
+				let thisvar = await Game.findBy('id', message.id)				
+				this.socket.broadcastToAll('message',thisvar)						
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	 
 	}
 	async onData (message){
-	try {
+	try {		
 	await Game
 	.query()
 	.where('id', message.id)
 	.update({
 		display_active: `${message.display_active}`,
-		user_id_one: `${message.user_id_one}`,
-		user_id_two: `${message.user_id_two}`,
-		name: `${message.name}`,
 		spin: `${message.spin}`
-	})
-	if(message.spin == 6 && message.status) 
-	{
-		
-	}	
-		this.socket.emit('message', await Game.findBy('id',{id:message.id}))
+	})	 
+	// console.log('Enter OnData')
+		 this.socket.emit('message', await Game.findBy('id',{id:message.id}))		
+		//this.socket.emit('message', {id:message.id})
 	} catch (error) {
-	this.socket.emit('error',error)
+		this.socket.on('error',() => {
+			this.socket.emit('errorlog',error)
+		})
 	}
-	}		
-	// No se usa	
-	async onSaveScore(message){
+	}				
+	async onSavescore(message){
 		// idusuario, idpartida, score		
 		try {
-		let nspin = Game.findBy('id',message.id)
+		// let nspin = Game.findBy('id',message.id)
+		let score = new Score()
+		score.user_id = message.id
+		score.score = message.puntuaje
+		await score.save()
+		console.log(score)
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	}
 	// id usuario uno, id partida
@@ -79,74 +86,133 @@ class PlayerController {
 		try {
 			let game = await Game.findBy('id',message.id)
 			if(game)
-			{	
-				//console.log(game)
-				if(game.user_id_one != 0 && game.user_id_two != 0){
-					this.socket.emit('error',{error: 'Partida Lleno'})
+			{					
+				if(game.user_id_one != 0 && game.user_id_two != 0){					
+					this.socket.emit('errorlog', {
+						error: 'Partida Llena'
+					})
 				}else
 				{						
-				if(game.user_id_one != 0)
-				{
-					console.log('Condicion uno')
+				if(game.user_id_one == 0)
+				{		
+					//console.log('Guarda jugador uno')		
+					await Game
+					.query()
+					.where('id', message.id)
+					.update({				
+					user_id_one: `${message.idusuario}`
+					})		
+				}
+				else
+				{				
 					await Game
 					.query()
 					.where('id', message.id)
 					.update({				
 					user_id_two: `${message.idusuario}`
-	})
-					//game.user_id_two = message.idusuario
-				}
-				else
-				{ 
-					console.log('condicion dos')
-					await Game
-	.query()
-	.where('id', message.id)
-	.update({				
-		user_id_one: `${message.idusuario}`
-	})
+					})
 					//game.user_id_one = message.idUsuario
 				}
 			}
+			this.socket.emit('message', await Game.findBy('id',{id:message.id}),serverCode())
 			}
 			else
 			{
-				this.socket.emit('error',{error: 'El juego no existe'})	
+				this.socket.emit('errorlog', {
+					error: 'Juego No Existe'
+				})
 			}
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
+	}
+
+	async onErrorlog(thiserror){
+		this.socket.broadcastToAll('errorlog',thiserror)
 	}
 
 	async onGames()
 	{
 		try {
-			let games = await Game.all()
-			//console.log(games)
+			let games = await Game.all()			
 			this.socket.broadcastToAll('games',games)
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
+		}
+	}
+/*
+	async onUpdategame()
+	{
+		try {
+			await Game
+					.query()
+					.where('id', message.id)
+					.update({				
+					user_id_one: `${message.idusuario}`
+					})
+		} catch (error) {
+
+		}
+	}*/
+	async onCreategame(message){
+		try {
+			let game = new Game()
+			game.name = message.name
+			await game.save();
+			//his.socket.emit('games')
+		} catch (error) {
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
+		}
+	}
+
+	async onDeletegame(message){
+		try {
+			let game = await Game.findBy('id',message.id)
+			await game.delete();
+			console.log(message)
+		} catch (error) {
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	}
 
 	async onGlobalscores()
 	{
 		try {			
-			let topscores = await Score.query().orderBy('score','desc').pick(10)		
-			this.socket.broadcastToAll('globalscores', topscores)
-			//console.log(topscores)
+			let topscores = await Score
+			.query()
+			.limit(10)
+			.innerJoin('users','users.id','scores.user_id')
+			.orderBy('score','desc')
+			.fetch()		
+			/*
+			.table('users')
+  			.innerJoin('accounts', 'user.id', 'accounts.user_id')
+			*/
+			this.socket.broadcastToAll('globalscores', topscores)			
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	}
 
 	async onScore(message){
 		try {
-			let userInfo = await User.findBy('id',message.id)
-			let scoreUser = await userInfo.scores().fetch()
-			this.socket.broadcastToAll('scores', scoreUser)
+			let userInfo = await User.findBy('id',message.id)			
+			let scoreUser = await userInfo.scores().fetch()			
+			this.socket.broadcastToAll('score', scoreUser)
 		} catch (error) {
-			this.socket.emit('error',error)
+			this.socket.on('error',() => {
+				this.socket.emit('errorlog',error)
+			})
 		}
 	}
 }
