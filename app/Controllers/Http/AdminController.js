@@ -91,7 +91,7 @@ class AdminController {
                return response
                .status(400)
                .json({
-                   message:'Borrado'
+                   message: 'Borrado'
                })
             }
             else {
