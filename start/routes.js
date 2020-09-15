@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /*
 |--------------------------------------------------------------------------
@@ -14,35 +14,29 @@
 */
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
-const Route = use('Route')
+const Route = use("Route");
 
-Route.get('/', () => {
-	return { greeting: 'Hello world in JSON' }
-})
+Route.get("/", () => {
+  return { greeting: "Hello world in JSON" };
+});
 
 /**
  * User Stuff
  */
 
-Route.post('login','UserController.login')
-
-Route.post('register','UserController.register')
-
-Route.get('get/:id', 'UserController.getUser').middleware(['auth'])
-
-Route.get('games','UserController.getGames').middleware(['auth'])
-
-Route.get('score/:id','UserController.getScore').middleware(['auth'])
+Route.post("login", "UserController.login");
+Route.post("register", "UserController.register");
+Route.get("get/:id", "UserController.getUser").middleware(["auth"]);
+Route.get("games", "UserController.getGames").middleware(["auth"]);
+Route.get("score/:id", "UserController.getScore").middleware(["auth"]);
 
 /**
  * Admin Stuff
  */
 
-Route.post('createg', 'AdminController.createGame').middleware(['auth'])
-
-Route.get('getg', 'AdminController.getGame').middleware(['auth'])
-
-Route.post('deleteg/:id', 'AdminController.deleteGame').middleware(['auth'])
+Route.post("createg", "AdminController.createGame").middleware(["auth"]);
+Route.get("getg", "AdminController.getGame").middleware(["auth"]);
+Route.post("deleteg/:id", "AdminController.deleteGame").middleware(["auth"]);
 
 // Route.post('resetg', 'AdminController.resetGame').middleware(['auth'])
 
